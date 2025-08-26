@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HappyVibes - Your Emotional Friend</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            text-align: center;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+            50% { transform: translate(-30%, -30%) rotate(180deg); }
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+            font-weight: 300;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        /* Pantalla de Bienvenida */
+        .welcome-screen {
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .name-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            text-align: center;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .name-input:focus {
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            margin-top: 20px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        /* Pantalla de Sentimientos */
+        .mood-screen {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .mood-question {
+            font-size: 1.6rem;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .mood-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 30px 0;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .mood-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: white;
+            text-align: left;
+        }
+
+        .mood-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .mood-card.selected {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Colores específicos para cada emoción */
+        .mood-happy { background: linear-gradient(135deg, #FFD700, #FFA500); }
+        .mood-sad { background: linear-gradient(135deg, #4682B4, #1E90FF); }
+        .mood-angry { background: linear-gradient(135deg, #DC143C, #B22222); }
+        .mood-anxious { background: linear-gradient(135deg, #9370DB, #8A2BE2); }
+        .mood-tired { background: linear-gradient(135deg, #708090, #2F4F4F); }
+        .mood-excited { background: linear-gradient(135deg, #FF69B4, #FF1493); }
+        .mood-calm { background: linear-gradient(135deg, #20B2AA, #008B8B); }
+        .mood-frustrated { background: linear-gradient(135deg, #FF4500, #FF6347); }
+        .mood-grateful { background: linear-gradient(135deg, #32CD32, #228B22); }
+        .mood-confused { background: linear-gradient(135deg, #DDA0DD, #D8BFD8); }
+        .mood-confident { background: linear-gradient(135deg, #FF8C00, #FF7F50); }
+        .mood-lonely { background: linear-gradient(135deg, #6495ED, #4169E1); }
+
+        .mood-emoji {
+            font-size: 2rem;
+            min-width: 40px;
+        }
+
+        .mood-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Pantalla de Tips */
+        .tips-screen {
+            display: none;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .tips-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .tips-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 400;
+        }
+
+        .current-mood {
+            display: inline-block;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+
+        .tips-container {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tip-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tip-card:nth-child(2n) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .tip-card:nth-child(3n) {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .tip-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .tip-icon {
+            font-size: 2rem;
+            min-width: 50px;
+        }
+
+        .tip-text {
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .view-calendar-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .new-entry-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Pantalla de Calendario */
+        .calendar-screen {
+            display: none;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .calendar-title {
+            font-size: 1.8rem;
+            color: #333;
+            font-weight: 400;
+        }
+
+        .nav-btn {
+            background: #4facfe;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 30px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            position: relative;
+            background: #f8f8f8;
+        }
+
+        .calendar-day.has-mood {
+            font-weight: bold;
+            color: white;
+        }
+
+        .calendar-day.mood-happy { background: linear-gradient(135deg, #FFD700, #FFA500); }
+        .calendar-day.mood-sad { background: linear-gradient(135deg, #4682B4, #1E90FF); }
+        .calendar-day.mood-angry { background: linear-gradient(135deg, #DC143C, #B22222); }
+        .calendar-day.mood-anxious { background: linear-gradient(135deg, #9370DB, #8A2BE2); }
+        .calendar-day.mood-tired { background: linear-gradient(135deg, #708090, #2F4F4F); }
+        .calendar-day.mood-excited { background: linear-gradient(135deg, #FF69B4, #FF1493); }
+        .calendar-day.mood-calm { background: linear-gradient(135deg, #20B2AA, #008B8B); }
+        .calendar-day.mood-frustrated { background: linear-gradient(135deg, #FF4500, #FF6347); }
+        .calendar-day.mood-grateful { background: linear-gradient(135deg, #32CD32, #228B22); }
+        .calendar-day.mood-confused { background: linear-gradient(135deg, #DDA0DD, #D8BFD8); color: #333; }
+        .calendar-day.mood-confident { background: linear-gradient(135deg, #FF8C00, #FF7F50); }
+        .calendar-day.mood-lonely { background: linear-gradient(135deg, #6495ED, #4169E1); }
+
+        .month-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .mood-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .mood-stat {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .stat-emoji {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-count {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .recommendations {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .rec-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #4facfe;
+            font-weight: 500;
+        }
+
+        .rec-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f8f8f8;
+            border-radius: 10px;
+        }
+
+        .rec-icon {
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .mood-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .calendar-grid {
+                gap: 3px;
+            }
+            
+            .calendar-day {
+                font-size: 0.8rem;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .day-names {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .day-name {
+            text-align: center;
+            font-weight: bold;
+            color: #666;
+            padding: 10px 5px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">HappyVibes</h1>
+            <p class="subtitle">Your Emotional Friend</p>
+        </div>
+
+        <!-- Pantalla de Bienvenida -->
+        <div class="content welcome-screen" id="welcomeScreen">
+            <h2 class="welcome-title">Hi! What is your name?</h2>
+            <input type="text" class="name-input" id="nameInput" placeholder="Escribe tu nombre aquí...">
+            <br>
+            <button class="start-btn" onclick="startApp()">Start my emotional journey</button>
+        </div>
+
+        <!-- Pantalla de Sentimientos -->
+        <div class="content mood-screen" id="moodScreen">
+            <h2 class="mood-question">Hello <span id="userName"></span>, how are you feeling today?</h2>
+            <div class="mood-grid">
+                <div class="mood-card mood-happy" onclick="selectMood('happy', '😊', 'Happy')">
+                    <div class="mood-emoji">😊</div>
+                    <div class="mood-name">Happy</div>
+                </div>
+                <div class="mood-card mood-sad" onclick="selectMood('sad', '😢', 'Sad')">
+                    <div class="mood-emoji">😢</div>
+                    <div class="mood-name">Sad</div>
+                </div>
+                <div class="mood-card mood-angry" onclick="selectMood('angry', '😠', 'Angry')">
+                    <div class="mood-emoji">😠</div>
+                    <div class="mood-name">Angry</div>
+                </div>
+                <div class="mood-card mood-anxious" onclick="selectMood('anxious', '😰', 'Anxious')">
+                    <div class="mood-emoji">😰</div>
+                    <div class="mood-name">Anxious</div>
+                </div>
+                <div class="mood-card mood-tired" onclick="selectMood('tired', '😴', 'Tired')">
+                    <div class="mood-emoji">😴</div>
+                    <div class="mood-name">Tired</div>
+                </div>
+                <div class="mood-card mood-excited" onclick="selectMood('excited', '🤩', 'Excited')">
+                    <div class="mood-emoji">🤩</div>
+                    <div class="mood-name">Excited</div>
+                </div>
+                <div class="mood-card mood-calm" onclick="selectMood('calm', '😌', 'Calm')">
+                    <div class="mood-emoji">😌</div>
+                    <div class="mood-name">Calm</div>
+                </div>
+                <div class="mood-card mood-frustrated" onclick="selectMood('frustrated', '😤', 'Frustrated')">
+                    <div class="mood-emoji">😤</div>
+                    <div class="mood-name">Frustrated</div>
+                </div>
+                <div class="mood-card mood-grateful" onclick="selectMood('grateful', '🙏', 'Grateful')">
+                    <div class="mood-emoji">🙏</div>
+                    <div class="mood-name">Grateful</div>
+                </div>
+                <div class="mood-card mood-confused" onclick="selectMood('confused', '😕', 'Confused')">
+                    <div class="mood-emoji">😕</div>
+                    <div class="mood-name">Confused</div>
+                </div>
+                <div class="mood-card mood-confident" onclick="selectMood('confident', '💪', 'Confident')">
+                    <div class="mood-emoji">💪</div>
+                    <div class="mood-name">Confident</div>
+                </div>
+                <div class="mood-card mood-lonely" onclick="selectMood('lonely', '😔', 'Lonely')">
+                    <div class="mood-emoji">😔</div>
+                    <div class="mood-name">Lonely</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pantalla de Tips -->
+        <div class="content tips-screen" id="tipsScreen">
+            <div class="tips-header">
+                <h2 class="tips-title">Personalized tips for you</h2>
+                <div class="current-mood" id="currentMoodDisplay"></div>
+            </div>
+            <div class="tips-container" id="tipsContainer">
+                <!-- Tips se generan dinámicamente -->
+            </div>
+            <div class="action-buttons">
+                <button class="action-btn view-calendar-btn" onclick="showCalendar()">See my emotional calendar</button>
+                <button class="action-btn new-entry-btn" onclick="newEntry()">New entry</button>
+            </div>
+        </div>
+
+        <!-- Pantalla de Calendario -->
+        <div class="content calendar-screen" id="calendarScreen">
+            <div class="calendar-header">
+                <button class="nav-btn" onclick="changeMonth(-1)">← Previous</button>
+                <h2 class="calendar-title" id="calendarTitle"></h2>
+                <button class="nav-btn" onclick="changeMonth(1)">Next →</button>
+            </div>
+            
+            <div class="day-names">
+                <div class="day-name">Dom</div>
+                <div class="day-name">Lun</div>
+                <div class="day-name">Mar</div>
+                <div class="day-name">Mié</div>
+                <div class="day-name">Jue</div>
+                <div class="day-name">Vie</div>
+                <div class="day-name">Sáb</div>
+            </div>
+            
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Días se generan dinámicamente -->
+            </div>
+
+            <!-- Resumen del mes (solo se muestra el primer día del mes siguiente) -->
+            <div class="month-summary hidden" id="monthSummary">
+                <h3 class="summary-title">Summary of your emotional month</h3>
+                <div class="mood-stats" id="moodStats">
+                    <!-- Estadísticas se generan dinámicamente -->
+                </div>
+            </div>
+
+            <div class="recommendations hidden" id="recommendations">
+                <h3 class="rec-title">Personalized recommendations</h3>
+                <div id="recommendationsList">
+                    <!-- Recomendaciones se generan dinámicamente -->
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-btn new-entry-btn" onclick="newEntry()">New entry</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let currentUser = '';
+        let currentDate = new Date();
+        let viewingDate = new Date();
+        let moodData = JSON.parse(localStorage.getItem('moodData') || '{}');
+
+        // Tips por estado de ánimo
+        const moodTips = {
+            happy: [
+                { icon: '🎵', text: 'Listen to your favorite playlist to keep the good vibes going' },
+                { icon: '📞', text: 'Share your joy with a close friend or family member' },
+                { icon: '📝', text: 'Write in a journal about what makes you feel good today' },
+                { icon: '🏃‍♂️', text: 'Do some exercise to amplify your positive energy' },
+                { icon: '🎨', text: 'Create something: draw, paint, or write creatively' }
+            ],
+            sad: [
+                { icon: '😴', text: 'Take a refreshing 20-30 minute nap' },
+                { icon: '🎵', text: 'Listen to relaxing or uplifting music' },
+                { icon: '📞', text: 'Talk to someone you trust about how you feel' },
+                { icon: '🚶‍♂️', text: 'Take a short walk outside in fresh air' },
+                { icon: '🛁', text: 'Take a warm, relaxing bath or shower' },
+                { icon: '📚', text: 'Read something you enjoy or watch an inspiring movie' }
+            ],
+            angry: [
+                { icon: '🥊', text: 'Do some intense exercise to channel your energy' },
+                { icon: '🧘‍♂️', text: 'Practice deep breathing for 5-10 minutes' },
+                { icon: '📝', text: 'Write your feelings on paper, then tear it up' },
+                { icon: '🎵', text: 'Listen to music that helps you release emotions' },
+                { icon: '🚶‍♂️', text: 'Go for a walk to clear your mind' }
+            ],
+            anxious: [
+                { icon: '🧘‍♂️', text: 'Practice meditation or mindfulness for 10 minutes' },
+                { icon: '💨', text: 'Try breathing exercises: inhale 4, hold 4, exhale 6' },
+                { icon: '📝', text: 'Make a list of your worries and possible solutions' },
+                { icon: '🎵', text: 'Listen to calming music or nature sounds' },
+                { icon: '☕', text: 'Drink a relaxing herbal tea like chamomile' },
+                { icon: '🌱', text: 'Focus on the present: 5 things you see, 4 you hear, 3 you feel' }
+            ],
+            tired: [
+                { icon: '😴', text: 'Take a power nap of 15-20 minutes' },
+                { icon: '💧', text: 'Stay hydrated, drink water or a natural energy drink' },
+                { icon: '🍎', text: 'Eat a healthy protein-rich snack' },
+                { icon: '🚶‍♂️', text: 'Do gentle stretches or light yoga' },
+                { icon: '💡', text: 'Get better lighting, natural light will boost your energy' },
+                { icon: '🎵', text: 'Listen to energizing music to activate yourself' }
+            ],
+            excited: [
+                { icon: '🎯', text: 'Channel your energy into studying or important tasks' },
+                { icon: '📝', text: 'Set clear goals for today and this week' },
+                { icon: '🏃‍♂️', text: 'Do some exercise to maintain your high energy' },
+                { icon: '🎨', text: 'Work on a creative personal project' },
+                { icon: '📞', text: 'Share your excitement with friends or family' },
+                { icon: '📚', text: 'Learn something new that interests you' }
+            ],
+            calm: [
+                { icon: '📚', text: 'Use this peaceful moment to study or read' },
+                { icon: '🧘‍♂️', text: 'Practice meditation to maintain inner peace' },
+                { icon: '📝', text: 'Write in a journal or plan your upcoming goals' },
+                { icon: '🎵', text: 'Listen to soft, peaceful music' },
+                { icon: '🌱', text: 'Spend time with plants or in nature' },
+                { icon: '☕', text: 'Enjoy a warm drink mindfully' }
+            ],
+            frustrated: [
+                { icon: '💨', text: 'Take deep breaths and count to ten slowly' },
+                { icon: '🚶‍♂️', text: 'Step away from the situation and take a walk' },
+                { icon: '📝', text: 'Write down what\'s frustrating you and brainstorm solutions' },
+                { icon: '🎵', text: 'Listen to music that helps you process emotions' },
+                { icon: '🏃‍♂️', text: 'Do physical activity to release built-up tension' },
+                { icon: '📞', text: 'Talk to someone who can offer perspective' }
+            ],
+            grateful: [
+                { icon: '📝', text: 'Write down three things you\'re grateful for today' },
+                { icon: '📞', text: 'Thank someone who has positively impacted your life' },
+                { icon: '🤝', text: 'Do something kind for someone else' },
+                { icon: '🎵', text: 'Listen to uplifting music that matches your mood' },
+                { icon: '📚', text: 'Read inspiring stories or quotes' },
+                { icon: '🌟', text: 'Reflect on your personal growth and achievements' }
+            ],
+            confused: [
+                { icon: '📝', text: 'Write down your thoughts to organize them clearly' },
+                { icon: '📚', text: 'Research or study to gain more clarity' },
+                { icon: '📞', text: 'Ask for advice from someone you trust' },
+                { icon: '🧘‍♂️', text: 'Take time to meditate and clear your mind' },
+                { icon: '🚶‍♂️', text: 'Take a walk to think things through' },
+                { icon: '💭', text: 'Break down complex problems into smaller parts' }
+            ],
+            confident: [
+                { icon: '🎯', text: 'Set ambitious goals and take action on them' },
+                { icon: '📞', text: 'Share your confidence by helping others' },
+                { icon: '📚', text: 'Take on challenging learning opportunities' },
+                { icon: '🎤', text: 'Practice public speaking or presentation skills' },
+                { icon: '🤝', text: 'Network and connect with new people' },
+                { icon: '🌟', text: 'Celebrate your achievements and progress' }
+            ],
+            lonely: [
+                { icon: '📞', text: 'Reach out to a friend or family member' },
+                { icon: '🎮', text: 'Join online communities with shared interests' },
+                { icon: '🚶‍♂️', text: 'Go to public spaces like parks or cafes' },
+                { icon: '🎵', text: 'Listen to podcasts or music to feel connected' },
+                { icon: '📝', text: 'Write a letter or message to someone you miss' },
+                { icon: '🤝', text: 'Consider volunteering to connect with others' }
+            ]
+        };
+
+        // Recomendaciones mensuales por patrón de estado de ánimo
+        const monthlyRecommendations = {
+            mostly_positive: [
+                { icon: '🌟', text: 'Continue with your current routine, it is working great.' },
+                { icon: '📚', text: 'Consider taking on new academic challenges' },
+                { icon: '🤝', text: 'Share your strategies with other students.' }
+            ],
+            mostly_negative: [
+                { icon: '💬', text: 'Consider speaking with a student counselor' },
+                { icon: '🧘‍♂️', text: 'Incorporate mindfulness techniques into your daily routine' },
+                { icon: '⏰', text: 'Check your sleep schedule and study habits' }
+            ],
+            mixed: [
+                { icon: '📊', text: 'Identify patterns: which days do you feel better?' },
+                { icon: '🎯', text: 'Focus on maintaining routines that make you feel good' },
+                { icon: '🏃‍♂️', text: 'Incorporate regular exercise to stabilize your mood' }
+            ],
+            frequent_stress: [
+                { icon: '📅', text: 'Better organize your study time with breaks' },
+                { icon: '🎵', text: 'Create a relaxing playlist for stressful moments' },
+                { icon: '🛀', text: 'Establish relaxation rituals before sleeping' }
+            ]
+        };
+
+        function startApp() {
+            const name = document.getElementById('nameInput').value.trim();
+            if (!name) {
+                alert('Por favor, ingresa tu nombre');
+                return;
+            }
+            
+            currentUser = name;
+            localStorage.setItem('userName', currentUser);
+            document.getElementById('userName').textContent = currentUser;
+            
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('moodScreen').style.display = 'block';
+        }
+
+        function selectMood(moodKey, emoji, moodName) {
+            // Marcar visualmente la selección
+            document.querySelectorAll('.mood-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.target.closest('.mood-card').classList.add('selected');
+
+            // Guardar el estado de ánimo del día actual
+            const today = currentDate.toISOString().split('T')[0];
+            if (!moodData[currentUser]) {
+                moodData[currentUser] = {};
+            }
+            moodData[currentUser][today] = {
+                mood: moodKey,
+                emoji: emoji,
+                name: moodName,
+                date: today
+            };
+            localStorage.setItem('moodData', JSON.stringify(moodData));
+
+            // Mostrar tips
+            setTimeout(() => {
+                showTips(moodKey, emoji, moodName);
+            }, 500);
+        }
+
+        function showTips(moodKey, emoji, moodName) {
+            document.getElementById('moodScreen').style.display = 'none';
+            document.getElementById('tipsScreen').style.display = 'block';
+            
+            document.getElementById('currentMoodDisplay').innerHTML = `${emoji} ${moodName}`;
+            
+            const tips = moodTips[moodKey];
+            const tipsContainer = document.getElementById('tipsContainer');
+            tipsContainer.innerHTML = '';
+            
+            tips.forEach((tip, index) => {
+                setTimeout(() => {
+                    const tipCard = document.createElement('div');
+                    tipCard.className = 'tip-card';
+                    tipCard.innerHTML = `
+                        <div class="tip-icon">${tip.icon}</div>
+                        <div class="tip-text">${tip.text}</div>
+                    `;
+                    tipCard.style.opacity = '0';
+                    tipCard.style.transform = 'translateY(20px)';
+                    tipsContainer.appendChild(tipCard);
+                    
+                    setTimeout(() => {
+                        tipCard.style.transition = 'all 0.5s ease';
+                        tipCard.style.opacity = '1';
+                        tipCard.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 200);
+            });
+        }
+
+        function showCalendar() {
+            document.getElementById('tipsScreen').style.display = 'none';
+            document.getElementById('calendarScreen').style.display = 'block';
+            generateCalendar();
+            checkMonthEnd();
+        }
+
+        function generateCalendar() {
+            const year = viewingDate.getFullYear();
+            const month = viewingDate.getMonth();
+            
+            // Actualizar título
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('calendarTitle').textContent = `${monthNames[month]} ${year}`;
+            
+            // Generar días del calendario
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+            
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = '';
+            
+            for (let i = 0; i < 42; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+                
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = date.getDate();
+                
+                if (date.getMonth() !== month) {
+                    dayElement.style.opacity = '0.3';
+                } else {
+                    const dateStr = date.toISOString().split('T')[0];
+                    const userMoodData = moodData[currentUser];
+                    
+                    if (userMoodData && userMoodData[dateStr]) {
+                        const moodEntry = userMoodData[dateStr];
+                        dayElement.classList.add('has-mood', `mood-${moodEntry.mood}`);
+                        dayElement.title = `${moodEntry.name} ${moodEntry.emoji}`;
+                    }
+                }
+                
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+
+        function changeMonth(direction) {
+            viewingDate.setMonth(viewingDate.getMonth() + direction);
+            generateCalendar();
+            checkMonthEnd();
+        }
+
+        function checkMonthEnd() {
+            const today = new Date();
+            const isFirstDayOfMonth = today.getDate() === 1;
+            const isViewingPreviousMonth = viewingDate.getMonth() !== today.getMonth() || viewingDate.getFullYear() !== today.getFullYear();
+            
+            if (isFirstDayOfMonth && isViewingPreviousMonth && viewingDate < today) {
+                showMonthSummary();
+            } else {
+                document.getElementById('monthSummary').classList.add('hidden');
+                document.getElementById('recommendations').classList.add('hidden');
+            }
+        }
+
+        function showMonthSummary() {
+            const year = viewingDate.getFullYear();
+            const month = viewingDate.getMonth();
+            const userMoodData = moodData[currentUser] || {};
+            
+            // Contar estados de ánimo del mes
+            const moodCounts = {
+                happy: 0, sad: 0, angry: 0, anxious: 0, tired: 0, excited: 0,
+                calm: 0, frustrated: 0, grateful: 0, confused: 0, confident: 0, lonely: 0
+            };
+            
+            const moodEmojis = {
+                happy: '😊', sad: '😢', angry: '😠', anxious: '😰', tired: '😴', excited: '🤩',
+                calm: '😌', frustrated: '😤', grateful: '🙏', confused: '😕', confident: '💪', lonely: '😔'
+            };
+            
+            const moodNames = {
+                happy: 'Happy', sad: 'Sad', angry: 'Angry', anxious: 'Anxious', tired: 'Tired', excited: 'Excited',
+                calm: 'Calm', frustrated: 'Frustrated', grateful: 'Grateful', confused: 'Confused', confident: 'Confident', lonely: 'Lonely'
+            };
+            
+            // Contar días del mes anterior
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            let totalDays = 0;
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const dateStr = date.toISOString().split('T')[0];
+                
+                if (userMoodData[dateStr]) {
+                    moodCounts[userMoodData[dateStr].mood]++;
+                    totalDays++;
+                }
+            }
+            
+            // Mostrar estadísticas
+            const moodStats = document.getElementById('moodStats');
+            moodStats.innerHTML = '';
+            
+            Object.keys(moodCounts).forEach(mood => {
+                if (moodCounts[mood] > 0) {
+                    const statElement = document.createElement('div');
+                    statElement.className = 'mood-stat';
+                    statElement.innerHTML = `
+                        <div class="stat-emoji">${moodEmojis[mood]}</div>
+                        <div class="stat-count">${moodCounts[mood]}</div>
+                        <div class="stat-label">${moodNames[mood]}</div>
+                    `;
+                    moodStats.appendChild(statElement);
+                }
+            });
+            
+            // Generar recomendaciones personalizadas
+            generateMonthlyRecommendations(moodCounts, totalDays);
+            
+            document.getElementById('monthSummary').classList.remove('hidden');
+            document.getElementById('recommendations').classList.remove('hidden');
+        }
+
+        function generateMonthlyRecommendations(moodCounts, totalDays) {
+            const recommendationsList = document.getElementById('recommendationsList');
+            recommendationsList.innerHTML = '';
+            
+            // Analizar patrones
+            const positiveMoods = moodCounts.happy + moodCounts.excited + moodCounts.grateful + moodCounts.confident + moodCounts.calm;
+            const negativeMoods = moodCounts.sad + moodCounts.angry + moodCounts.lonely + moodCounts.frustrated;
+            const stressMoods = moodCounts.anxious + moodCounts.tired + moodCounts.confused;
+            
+            let recommendationType = 'mixed';
+            
+            if (positiveMoods > totalDays * 0.6) {
+                recommendationType = 'mostly_positive';
+            } else if (negativeMoods > totalDays * 0.4) {
+                recommendationType = 'mostly_negative';
+            } else if (stressMoods > totalDays * 0.4) {
+                recommendationType = 'frequent_stress';
+            }
+            
+            // Recomendaciones específicas basadas en el patrón
+            let recommendations = [...monthlyRecommendations[recommendationType]];
+            
+            // Recomendaciones adicionales creativas para jóvenes
+            const creativeRecommendations = [
+                { icon: '🎮', text: 'Try relaxation games or mindfulness apps like Headspace' },
+                { icon: '📱', text: 'Create a digital photo album with your favorite moments' },
+                { icon: '🎪', text: 'Host a movie night with virtual friends' },
+                { icon: '🍕', text: 'Learn to cook a new recipe you always wanted to try' },
+                { icon: '🎨', text: 'Start an art project: digital drawing, music, writing' },
+                { icon: '📺', text: 'Watch inspiring documentaries on topics that interest you' },
+                { icon: '💌', text: 'Write thank you letters to people important to you' },
+                { icon: '🌱', text: 'Take care of a plant or start a small garden at home' },
+                { icon: '🎵', text: 'Create playlists for different moods' },
+                { icon: '📖', text: 'Read personal development books adapted for young people' },
+                { icon: '🏠', text: 'Redecorate your study space with elements that motivate you' },
+                { icon: '🎯', text: 'Set daily micro-goals that you can easily accomplish' }
+            ];
+            
+            // Mezclar con recomendaciones creativas
+            const shuffled = creativeRecommendations.sort(() => 0.5 - Math.random());
+            recommendations = recommendations.concat(shuffled.slice(0, 3));
+            
+            // Recomendaciones específicas por estado de ánimo dominante
+            if (moodCounts.sad > totalDays * 0.25) {
+                recommendations.push({ icon: '☀️', text: 'Try to spend more time near windows or outdoors' });
+                recommendations.push({ icon: '🤗', text: 'Plan social activities, even virtual ones' });
+            }
+            
+            if (moodCounts.anxious > totalDays * 0.25) {
+                recommendations.push({ icon: '📝', text: 'Try journaling: write 3 good things about each day every night' });
+                recommendations.push({ icon: '⏰', text: 'Use time management techniques like Pomodoro for studying' });
+            }
+            
+            if (moodCounts.tired > totalDays * 0.25) {
+                recommendations.push({ icon: '💤', text: 'Review your sleep hygiene: regular schedules and less screens before bed' });
+                recommendations.push({ icon: '🥗', text: 'Include more fruits and vegetables in your diet' });
+            }
+
+            if (moodCounts.lonely > totalDays * 0.20) {
+                recommendations.push({ icon: '👥', text: 'Join study groups or online communities with shared interests' });
+                recommendations.push({ icon: '📞', text: 'Schedule regular calls with friends and family' });
+            }
+
+            if (moodCounts.frustrated > totalDays * 0.20) {
+                recommendations.push({ icon: '🎯', text: 'Break down big tasks into smaller, manageable steps' });
+                recommendations.push({ icon: '🏃‍♂️', text: 'Use physical activity as a healthy outlet for frustration' });
+            }
+            
+            // Mostrar recomendaciones (máximo 6)
+            recommendations.slice(0, 6).forEach(rec => {
+                const recElement = document.createElement('div');
+                recElement.className = 'rec-item';
+                recElement.innerHTML = `
+                    <div class="rec-icon">${rec.icon}</div>
+                    <div>${rec.text}</div>
+                `;
+                recommendationsList.appendChild(recElement);
+            });
+        }
+
+        function newEntry() {
+            // Resetear selecciones
+            document.querySelectorAll('.mood-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Volver a la pantalla de selección de estado de ánimo
+            document.getElementById('calendarScreen').style.display = 'none';
+            document.getElementById('tipsScreen').style.display = 'none';
+            document.getElementById('moodScreen').style.display = 'block';
+        }
+
+        // Inicialización de la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar si el usuario ya existe
+            const savedUser = localStorage.getItem('userName');
+            if (savedUser) {
+                currentUser = savedUser;
+                document.getElementById('nameInput').value = currentUser;
+                document.getElementById('userName').textContent = currentUser;
+                
+                // Si ya registró su estado de ánimo hoy, ir directo a tips
+                const today = new Date().toISOString().split('T')[0];
+                if (moodData[currentUser] && moodData[currentUser][today]) {
+                    const todayMood = moodData[currentUser][today];
+                    document.getElementById('welcomeScreen').style.display = 'none';
+                    showTips(todayMood.mood, todayMood.emoji, todayMood.name);
+                }
+            }
+        });
+
+        // Animaciones adicionales
+        function addSparkle(x, y) {
+            const sparkle = document.createElement('div');
+            sparkle.innerHTML = '✨';
+            sparkle.style.position = 'fixed';
+            sparkle.style.left = x + 'px';
+            sparkle.style.top = y + 'px';
+            sparkle.style.pointerEvents = 'none';
+            sparkle.style.fontSize = '1rem';
+            sparkle.style.zIndex = '1000';
+            sparkle.style.animation = 'fadeIn 0.5s ease-out, fadeIn 0.5s ease-out 1s reverse';
+            document.body.appendChild(sparkle);
+
+            setTimeout(() => {
+                sparkle.remove();
+            }, 1500);
+        }
+
+        // Efectos al hacer clic en las tarjetas de estado de ánimo
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.mood-card') || e.target.closest('.tip-card')) {
+                addSparkle(e.clientX, e.clientY);
+            }
+        });
+    </script>
+</body>
+</html>
